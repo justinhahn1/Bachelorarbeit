@@ -1,0 +1,41 @@
+# Files Created by bachelorthesis_final.ipynb
+
+| Location | File | Size (MB) | Size (KB) |
+| --- | --- | --- | --- |
+| data/processed/ | final_step1_wficn_portfolio_month.csv | 55.4 | nan |
+| data/processed/ | final_step2_clean_wficn_edc_flows.csv | 35.2 | nan |
+| data/processed/ | final_step3_regression_ready_wficn_edc.csv | 31.6 | nan |
+| output/tables/ | final_analysis_overview_qc.md | nan | 11.2 |
+| output/tables/ | final_analysis_pipeline.csv | nan | 1.1 |
+| output/tables/ | final_notebook_file_inventory.md | nan | 2.7 |
+| output/tables/ | final_step1_wficn_mapping_diagnostics.csv | nan | 0.9 |
+| output/tables/ | final_step1_wficn_mapping_diagnostics.md | nan | 2.2 |
+| output/tables/ | final_step2_exclusions.csv | nan | 0.2 |
+| output/tables/ | final_step2_exclusions.md | nan | 0.3 |
+| output/tables/ | final_step2_quality_checks.md | nan | 7.5 |
+| output/tables/ | final_step2_return_flow_quality_check.md | nan | 15.6 |
+| output/tables/ | final_step2_sample_construction.csv | nan | 0.9 |
+| output/tables/ | final_step2_sample_construction.md | nan | 1.1 |
+| output/tables/ | final_step2_summary_statistics.csv | nan | 0.7 |
+| output/tables/ | final_step2_summary_statistics.md | nan | 1.0 |
+| output/tables/ | final_step3_sample_construction.csv | nan | 0.5 |
+| output/tables/ | final_step3_sample_construction.md | nan | 0.7 |
+| output/tables/ | final_step3_summary_statistics.csv | nan | 1.2 |
+| output/tables/ | final_step3_summary_statistics.md | nan | 1.7 |
+| output/tables/ | final_step4_main_regression_interpretation.md | nan | 1.9 |
+| output/tables/ | final_step4_main_regressions_12m.csv | nan | 0.7 |
+| output/tables/ | final_step4_main_regressions_12m.md | nan | 1.3 |
+| output/tables/ | final_step4_regression_qc_check.md | nan | 4.7 |
+| output/tables/ | final_step5_quintile_average_flows.csv | nan | 0.4 |
+| output/tables/ | final_step5_quintile_average_flows.md | nan | 0.9 |
+| output/tables/ | final_step5_quintile_interpretation.md | nan | 2.7 |
+| output/tables/ | final_step5_quintile_regressions.csv | nan | 0.9 |
+| output/tables/ | final_step5_quintile_regressions.md | nan | 1.6 |
+| output/tables/ | final_step6_robustness_6m_interpretation.md | nan | 3.1 |
+| output/tables/ | final_step6_robustness_6m_quintile_average_flows.csv | nan | 0.4 |
+| output/tables/ | final_step6_robustness_6m_quintile_average_flows.md | nan | 0.8 |
+| output/tables/ | final_step6_robustness_6m_quintile_regressions.csv | nan | 0.9 |
+| output/tables/ | final_step6_robustness_6m_quintile_regressions.md | nan | 1.5 |
+| output/tables/ | final_step6_robustness_6m_regressions.csv | nan | 0.7 |
+| output/tables/ | final_step6_robustness_6m_regressions.md | nan | 1.2 |
+| output/tables/ | final_thesis_table_inventory.csv | nan | 1.3 |

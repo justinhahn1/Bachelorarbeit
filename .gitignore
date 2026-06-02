@@ -21,3 +21,22 @@ rad.json
 *.flf
 #Test results file
 TestResults.xml
+
+### Thesis data — never commit CRSP/WRDS data ###
+*.csv
+*.zip
+*.gz
+*.parquet
+*.dta
+data/raw/
+data/processed/
+real\ data/real,\ clear\ data/
+real\ data/processed/
+
+### macOS / Python ###
+.DS_Store
+**/.DS_Store
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+__pycache__/
+*.pyc
