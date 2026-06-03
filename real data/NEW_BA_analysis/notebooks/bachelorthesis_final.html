@@ -9389,13 +9389,7 @@ Q1 (worst)  -0.010135    -0.009638  18231
  Q5 (best)   0.017789     0.004127  18205
 
 Q5 − Q1 spread (6m): +0.0279 (+2.792 pp/month)
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>
+
 Running 6m quintile regressions …
   (1)  N=83,319  R²=0.0395  adj-R²=0.0394
   (2)  N=83,319  R²=0.0518  adj-R²=0.0518
@@ -9542,13 +9536,496 @@ All specifications positive, significant (p&lt;0.001), monotone, and convex.
 </div>
 </div>
 </div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e532f2c9">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="10.-Extension:-2003%E2%80%932025-Recent-Sample-Analysis">10. Extension: 2003–2025 Recent-Sample Analysis<a class="anchor-link" href="#10.-Extension:-2003%E2%80%932025-Recent-Sample-Analysis">¶</a></h2><h3 id="Overview">Overview<a class="anchor-link" href="#Overview">¶</a></h3><p>This section applies the <strong>same empirical pipeline</strong> used in the baseline analysis to a
+more recent CRSP sample covering 2003–2025. It constitutes the main <strong>own contribution</strong>
+of this thesis.</p>
+<p><strong>Methodology (identical to baseline):</strong></p>
+<ul>
+<li>WFICN-level TNA-weighted return aggregation (MFLinks mapping)</li>
+<li>EDC filter (domestic active equity), ETF/index fund exclusions</li>
+<li>Flow = TNA_t / TNA_{t-1} − (1 + R_t), gap-validated, winsorised at 1st/99th pct</li>
+<li>Past 12-month return: rolling gap-aware cumulative return, lagged one period</li>
+<li>OLS with WFICN-clustered standard errors; Month FE (M3) and Month + EDC FE (M4)</li>
+</ul>
+<p><strong>Why 2003–2025?</strong><br/>
+The 2003 starting year reflects the availability of the new CRSP data extract.
+The extension provides temporal robustness and tests whether the performance-chasing
+pattern documented in the baseline (1991–2011) persists in a materially different
+market environment including the Global Financial Crisis (2008–2009), the COVID-19
+shock (2020), and the 2022 interest rate cycle.</p>
+<p><strong>Burn-in note:</strong><br/>
+Although raw CRSP data begin in 2003, the main 12-month regression sample begins
+in <strong>2004</strong> because <code>past_12m_return</code> requires 12 consecutive lagged monthly returns.</p>
+<p><strong>Subperiod analysis</strong> is not conducted due to the 20-page thesis limit.</p>
+<p><strong>Extension scripts</strong> (run separately, outputs loaded below):</p>
+<ul>
+<li><code>extension_2003_2025_step1_wficn_portfolio_month.py</code></li>
+<li><code>extension_2003_2025_step2_clean_edc_flows.py</code></li>
+<li><code>extension_2003_2025_step3_regressions_quintiles.py</code></li>
+<li><code>extension_2003_2025_final_qc_comparison.py</code></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3b034900">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="10.1-Extension-Sample-Construction">10.1 Extension Sample Construction<a class="anchor-link" href="#10.1-Extension-Sample-Construction">¶</a></h3>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=ea3a8a4c">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [21]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span>
+<span class="c1"># EXT_TABS points to the output/tables directory (works from notebooks/ or project root)</span>
+<span class="n">EXT_TABS</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s2">".."</span><span class="p">,</span> <span class="s2">"output"</span><span class="p">,</span> <span class="s2">"tables"</span><span class="p">))</span>
+
+<span class="n">sc_ext</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">EXT_TABS</span><span class="p">,</span> <span class="s2">"extension_2003_2025_sample_construction.csv"</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Extension Sample Construction"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+<span class="n">funnel_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"step"</span><span class="p">,</span> <span class="s2">"obs"</span><span class="p">,</span> <span class="s2">"unique_wficn"</span><span class="p">,</span> <span class="s2">"note"</span><span class="p">]</span>
+<span class="n">disp_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">funnel_cols</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">sc_ext</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sc_ext</span><span class="p">[</span><span class="n">disp_cols</span><span class="p">]</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Key numbers:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"  Full cleaned sample:          193,074 obs, 1,474 unique WFICNs"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"  12m regression sample:        135,585 obs (after requiring exp_ratio + turn_ratio)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"  Effective regression period:  2004-01 to 2025-12"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Extension Sample Construction
+======================================================================
+                                                          step       obs  unique_wficn                                          note
+                   0. All WFICN-month observations after merge 2115074.0       14421.0                                           NaN
+                            1. Drop missing/zero portfolio_tna 2114869.0       14421.0                positive TNA required for flow
+                              2. Drop missing portfolio_return 2060322.0       14415.0                           no return available
+             3. Keep EDC funds (crsp_obj_cd starts with 'EDC')  280439.0        2124.0  broader 'ED' prefix would keep 1,073,066 obs
+                                 4. Exclude ETFs (flag + name)  253355.0        1881.0                  flag: 27,012  name-based: 72
+                          5. Exclude index funds (flag + name)  210421.0        1612.0               flag: 41,253  name-based: 1,681
+6. Exclude non-target types (international/bond/MM/balanced …)  205420.0        1585.0                  5,001 obs caught by keywords
+                 7. Final cleaned EDC sample (before QC rules)  205420.0        1585.0                                           NaN
+                                                           ---       NaN           NaN            Final cleaning (regression-ready):
+                 0. Step 2 input (after EDC/ETF/index filters)  205420.0        1585.0                         Before final cleaning
+                                1. Drop |portfolio_return| ≥ 1  205418.0        1585.0    economically impossible for long-only fund
+                           2. Require lag_portfolio_tna ≥ $10M  193679.0        1474.0 Chevalier &amp; Ellison 1997; Sirri &amp; Tufano 1998
+                               3. Drop missing flow_winsorized  193074.0        1474.0                           DV must be non-null
+                    4. Drop remaining missing portfolio_return  193074.0        1474.0               needed for performance measures
+
+Key numbers:
+  Full cleaned sample:          193,074 obs, 1,474 unique WFICNs
+  12m regression sample:        135,585 obs (after requiring exp_ratio + turn_ratio)
+  Effective regression period:  2004-01 to 2025-12
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b1a87ec4">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="10.2-Extension-Summary-Statistics">10.2 Extension Summary Statistics<a class="anchor-link" href="#10.2-Extension-Summary-Statistics">¶</a></h3>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=df2fe4e1">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [22]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">ss_ext</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">EXT_TABS</span><span class="p">,</span> <span class="s1">'extension_2003_2025_summary_statistics.csv'</span><span class="p">))</span>
+
+<span class="c1"># Select and format key variables</span>
+<span class="n">key_vars</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'Fund flow (winsorized 1/99)'</span><span class="p">,</span>
+    <span class="s1">'Monthly portfolio return'</span><span class="p">,</span>
+    <span class="s1">'Past 12-month cumulative return'</span><span class="p">,</span>
+    <span class="s1">'Portfolio TNA ($M)'</span><span class="p">,</span>
+    <span class="s1">'Expense ratio'</span><span class="p">,</span>
+    <span class="s1">'Turnover ratio'</span><span class="p">,</span>
+    <span class="s1">'Fund age (years)'</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">ss_disp</span> <span class="o">=</span> <span class="n">ss_ext</span><span class="p">[</span><span class="n">ss_ext</span><span class="p">[</span><span class="s1">'variable'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">key_vars</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">ss_disp</span> <span class="o">=</span> <span class="n">ss_disp</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'variable'</span><span class="p">)</span>
+
+<span class="c1"># Convert flow/return to percentage points where appropriate</span>
+<span class="n">pct_vars</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'Fund flow (winsorized 1/99)'</span><span class="p">,</span>
+    <span class="s1">'Monthly portfolio return'</span><span class="p">,</span>
+    <span class="s1">'Past 12-month cumulative return'</span><span class="p">,</span>
+    <span class="s1">'Expense ratio'</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">pct_vars</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ss_disp</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'mean'</span><span class="p">,</span> <span class="s1">'std'</span><span class="p">,</span> <span class="s1">'p25'</span><span class="p">,</span> <span class="s1">'median'</span><span class="p">,</span> <span class="s1">'p75'</span><span class="p">]:</span>
+            <span class="n">ss_disp</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">ss_disp</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Extension Summary Statistics (2003–2025, active EDC funds)'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'  Flow/return variables in percentage points; TNA in $M'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'='</span> <span class="o">*</span> <span class="mi">85</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ss_disp</span><span class="p">[[</span><span class="s1">'N'</span><span class="p">,</span> <span class="s1">'mean'</span><span class="p">,</span> <span class="s1">'std'</span><span class="p">,</span> <span class="s1">'p25'</span><span class="p">,</span> <span class="s1">'median'</span><span class="p">,</span> <span class="s1">'p75'</span><span class="p">]]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Extension Summary Statistics (2003–2025, active EDC funds)
+  Flow/return variables in percentage points; TNA in $M
+=====================================================================================
+                                      N     mean      std    p25  median     p75
+variable                                                                        
+Fund flow (winsorized 1/99)      193074    -0.28     4.08  -1.49   -0.56    0.48
+Monthly portfolio return         193074     0.91     5.48  -2.08    1.31    4.20
+Past 12-month cumulative return  170616    11.07    19.11  -0.30   10.72   21.77
+Portfolio TNA ($M)               193074  1078.51  2667.08  99.60  307.50  909.20
+Expense ratio                    153413     1.29     0.38   1.07    1.26    1.50
+Turnover ratio                   153174     0.75     0.67   0.34    0.60    0.96
+Fund age (years)                 193074    16.18    10.20   8.59   14.78   21.92
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=30ec464d">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="10.3-Extension-Main-12-Month-Flow-Performance-Regressions">10.3 Extension Main 12-Month Flow-Performance Regressions<a class="anchor-link" href="#10.3-Extension-Main-12-Month-Flow-Performance-Regressions">¶</a></h3><p>Same four specifications as the baseline (Section 6).<br/>
+Dependent variable: <code>flow_winsorized</code>. Main regressor: <code>past_12m_return</code>.
+Standard errors clustered by WFICN.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=498bf087">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [23]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">reg_ext</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">EXT_TABS</span><span class="p">,</span> <span class="s1">'extension_2003_2025_main_regressions_12m.csv'</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Extension: 12-Month Flow-Performance Regressions'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'='</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">reg_ext</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Preferred specification (M3, month FE):'</span><span class="p">)</span>
+<span class="n">perf_row</span> <span class="o">=</span> <span class="n">reg_ext</span><span class="p">[</span><span class="n">reg_ext</span><span class="p">[</span><span class="s1">'Variable'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'Past 12m Return'</span><span class="p">]</span>
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">perf_row</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">coef_m3</span> <span class="o">=</span> <span class="n">perf_row</span><span class="p">[</span><span class="s1">'(3) Month FE'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Coefficient on past_12m_return: </span><span class="si">{</span><span class="n">coef_m3</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Interpretation: +10 pp higher past return → +1.171 pp/month higher flow"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="c1"># Economic interpretation</span>
+<span class="n">coef</span> <span class="o">=</span> <span class="mf">0.1171</span>
+<span class="n">effect_10pp</span> <span class="o">=</span> <span class="n">coef</span> <span class="o">*</span> <span class="mf">0.10</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  +10 pp past return → +</span><span class="si">{</span><span class="n">effect_10pp</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> pp/month flow change"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Significant at p&lt;0.001 in all four specifications"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Extension: 12-Month Flow-Performance Regressions
+======================================================================
+        Variable (1) Baseline (2) Controls (3) Month FE (4) Month+EDC FE
+ Past 12m Return    0.0219***    0.0216***    0.1171***        0.1173***
+             NaN     (0.0011)     (0.0011)     (0.0043)         (0.0043)
+  log(TNA_{t-1})            —       0.0000      -0.0001          -0.0002
+             NaN          NaN     (0.0002)     (0.0002)         (0.0002)
+   Expense Ratio            —   -0.3297***   -0.3787***       -0.3293***
+             NaN          NaN     (0.0754)     (0.0833)         (0.0827)
+Fund Age (years)            —   -0.0004***   -0.0003***       -0.0003***
+             NaN          NaN     (0.0000)     (0.0000)         (0.0000)
+  Turnover Ratio            —   -0.0013***   -0.0014***       -0.0016***
+             NaN          NaN     (0.0005)     (0.0005)         (0.0005)
+        Constant   -0.0061***    0.0057***   -0.0405***       -0.0406***
+             NaN     (0.0003)     (0.0018)     (0.0035)         (0.0035)
+               N      135,585      135,585      135,585          135,585
+              R²       0.0115       0.0229       0.0752           0.0759
+         Adj. R²       0.0115       0.0229       0.0734           0.0741
+        Month FE           No           No          Yes              Yes
+    EDC Style FE           No           No           No              Yes
+
+Preferred specification (M3, month FE):
+  Coefficient on past_12m_return: 0.1171***
+  Interpretation: +10 pp higher past return → +1.171 pp/month higher flow
+
+  +10 pp past return → +1.171 pp/month flow change
+  Significant at p&lt;0.001 in all four specifications
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=faf0fac4">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="10.4-Extension-Quintile-Analysis">10.4 Extension Quintile Analysis<a class="anchor-link" href="#10.4-Extension-Quintile-Analysis">¶</a></h3><p>Monthly quintile sort on <code>past_12m_return</code>; Q1 = reference group.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=1450df9c">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [24]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Panel A: average flows</span>
+<span class="n">qavg_ext</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">EXT_TABS</span><span class="p">,</span> <span class="s1">'extension_2003_2025_quintile_average_flows.csv'</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Extension Quintile Analysis — Panel A: Average Monthly Flows'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'='</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+<span class="k">if</span> <span class="s1">'Mean Flow (pp)'</span> <span class="ow">in</span> <span class="n">qavg_ext</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="n">disp</span> <span class="o">=</span> <span class="n">qavg_ext</span><span class="p">[[</span><span class="s1">'Quintile'</span><span class="p">,</span> <span class="s1">'Mean Flow (pp)'</span><span class="p">,</span> <span class="s1">'Median Flow (pp)'</span><span class="p">,</span> <span class="s1">'N obs'</span><span class="p">]]</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">disp</span> <span class="o">=</span> <span class="n">qavg_ext</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">disp</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Extension Quintile Analysis — Panel B: Regression Coefficients'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'='</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+<span class="n">qreg_ext</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">EXT_TABS</span><span class="p">,</span> <span class="s1">'extension_2003_2025_quintile_regressions.csv'</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">qreg_ext</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Key metrics (M3):'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'  Q5 premium (reg-adjusted):  +2.61 pp/month'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'  Q5−Q1 unconditional spread: +2.23 pp/month'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'  Convexity ratio:             3.10×'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'  Monotonic Q1→Q5:            Yes (all 4 models)'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Extension Quintile Analysis — Panel A: Average Monthly Flows
+======================================================================
+      Quintile  Mean Flow (pp)  Median Flow (pp)   N obs
+    Q1 (worst)         -1.4970           -1.1252 34231.0
+            Q2         -0.8368           -0.7808 34075.0
+            Q3         -0.5088           -0.6186 34064.0
+            Q4         -0.1911           -0.4739 34075.0
+     Q5 (best)          0.7375           -0.0950 34171.0
+Q5 − Q1 spread          2.2345               NaN     NaN
+
+Extension Quintile Analysis — Panel B: Regression Coefficients
+======================================================================
+        Variable (1) Baseline (2) Controls (3) Month FE (4) Month+EDC FE
+              Q2    0.0081***    0.0076***    0.0075***        0.0075***
+             NaN     (0.0005)     (0.0005)     (0.0005)         (0.0004)
+              Q3    0.0117***    0.0112***    0.0111***        0.0110***
+             NaN     (0.0005)     (0.0005)     (0.0005)         (0.0005)
+              Q4    0.0153***    0.0148***    0.0148***        0.0147***
+             NaN     (0.0006)     (0.0006)     (0.0006)         (0.0006)
+              Q5    0.0265***    0.0262***    0.0261***        0.0261***
+             NaN     (0.0009)     (0.0009)     (0.0009)         (0.0009)
+  log(TNA_{t-1})            —      -0.0000      -0.0001          -0.0002
+             NaN          NaN     (0.0002)     (0.0002)         (0.0002)
+   Expense Ratio            —   -0.2685***   -0.3661***       -0.3219***
+             NaN          NaN     (0.0738)     (0.0795)         (0.0793)
+Fund Age (years)            —   -0.0004***   -0.0003***       -0.0003***
+             NaN          NaN     (0.0000)     (0.0000)         (0.0000)
+  Turnover Ratio            —    -0.0012**   -0.0014***       -0.0015***
+             NaN          NaN     (0.0005)     (0.0005)         (0.0005)
+        Constant   -0.0160***    -0.0046**    0.0099***        0.0100***
+             NaN     (0.0005)     (0.0018)     (0.0027)         (0.0027)
+       Q1 (ref.)          Yes          Yes          Yes              Yes
+               N      135,585      135,585      135,585          135,585
+              R²       0.0492       0.0598       0.0749           0.0755
+         Adj. R²       0.0491       0.0598       0.0730           0.0736
+        Month FE           No           No          Yes              Yes
+          EDC FE           No           No           No              Yes
+
+Key metrics (M3):
+  Q5 premium (reg-adjusted):  +2.61 pp/month
+  Q5−Q1 unconditional spread: +2.23 pp/month
+  Convexity ratio:             3.10×
+  Monotonic Q1→Q5:            Yes (all 4 models)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f6a5de41">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="10.5-Baseline-vs.-Extension-Comparison">10.5 Baseline vs. Extension Comparison<a class="anchor-link" href="#10.5-Baseline-vs.-Extension-Comparison">¶</a></h3><p>Both samples use identical methodology. Differences reflect the fund universe
+and market environment changes across periods.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=54ebf4c2">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [25]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">comp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">EXT_TABS</span><span class="p">,</span> <span class="s1">'extension_2003_2025_baseline_comparison.csv'</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Baseline vs. Extension Comparison'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'='</span> <span class="o">*</span> <span class="mi">75</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">comp</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Interpretation:'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'  1. Positive flow-performance relationship confirmed in both samples (p&lt;0.001)'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'  2. Extension coefficient (+0.1171) is 26</span><span class="si">% s</span><span class="s1">tronger than baseline (+0.0928)'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'     Plausible given heightened return dispersion in GFC/COVID/2022 rate cycle'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'  3. Q5 premium slightly smaller in extension (+2.61 vs +3.23 pp/month)'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'     Larger, more diverse fund universe in extension period'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'  4. Convexity stronger in extension (3.10× vs ~2.4×)'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'     Disproportionate reward for top performers persists and intensifies'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'  5. All 14 consistency checks passed (see extension_2003_2025_final_qc_comparison.py)'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Baseline vs. Extension Comparison
+===========================================================================
+                        Metric              Baseline (1991–2011)             Extension (2003–2025)
+                  Sample label              Baseline replication      Extension (own contribution)
+               Raw CRSP period                         1991–2011                         2003–2025
+     Effective 12m reg. period                         1999–2011                         2004–2025
+                 Fund universe                Active EDC (WFICN)                Active EDC (WFICN)
+          Regression N (M3/M4)                            77,140                           135,585
+      Unique WFICNs / clusters                             1,215                             1,120
+                  M3 coef (SE)                   0.0928 (0.0047)                   0.1171 (0.0043)
++10 pp past return → flow (M3)                   +0.928 pp/month                   +1.171 pp/month
+                       Flow SD                           5.22 pp                           4.08 pp
+            past_12m_return SD                           24.5 pp                           19.1 pp
+   Q5−Q1 (unconditional means)                    +3.22 pp/month                    +2.23 pp/month
+      Q5 premium, reg-adj (M3)                   +3.230 pp/month                   +2.610 pp/month
+          Convexity ratio (M3)                             ~2.4×                             3.10×
+          Monotonic Q2→Q5 (M3)                Yes (all 4 models)                Yes (all 4 models)
+           Median lag TNA ($M)                               212                               306
+       Median fund age (years)                               8.9                              14.8
+                 SE clustering                             WFICN                             WFICN
+                      Controls log_TNA, exp_ratio, age, turnover log_TNA, exp_ratio, age, turnover
+                    FE (M3/M4)                 Month / Month+EDC                 Month / Month+EDC
+
+Interpretation:
+  1. Positive flow-performance relationship confirmed in both samples (p&lt;0.001)
+  2. Extension coefficient (+0.1171) is 26% stronger than baseline (+0.0928)
+     Plausible given heightened return dispersion in GFC/COVID/2022 rate cycle
+  3. Q5 premium slightly smaller in extension (+2.61 vs +3.23 pp/month)
+     Larger, more diverse fund universe in extension period
+  4. Convexity stronger in extension (3.10× vs ~2.4×)
+     Disproportionate reward for top performers persists and intensifies
+  5. All 14 consistency checks passed (see extension_2003_2025_final_qc_comparison.py)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=91307470">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="10.6-Caveats">10.6 Caveats<a class="anchor-link" href="#10.6-Caveats">¶</a></h3><ol>
+<li><p><strong>Missing exp_ratio / turn_ratio (20.5%):</strong> M3/M4 sample is 135,585 vs. 170,616 for M1/M2.
+Same pattern as baseline; both controls are retained for methodological consistency.</p>
+</li>
+<li><p><strong>FSQ aggregation:</strong> The 2003–2025 file lacks a <code>tna_latest</code> column. Categorical
+characteristics use the representative share class (lowest <code>crsp_fundno</code>); numeric
+characteristics are unweighted means. Minor deviation; negligible impact on results.</p>
+</li>
+<li><p><strong>WFICN mapping 79% overall:</strong> After the EDC filter, mapped rate ≥95%.
+Unmapped observations are non-equity funds outside MFLinks coverage.</p>
+</li>
+<li><p><strong>Structural heterogeneity:</strong> The 2003–2025 sample spans GFC (2008–2009), COVID-19
+(2020), and 2022 rate shock. Subperiod analysis is not conducted due to page limits.</p>
+</li>
+<li><p><strong>Temporal robustness only:</strong> Both samples use CRSP data with the same methodology.
+This is not a cross-source replication.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1ebd00d1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="10.-Conclusion">10. Conclusion<a class="anchor-link" href="#10.-Conclusion">¶</a></h2><h3 id="Main-Empirical-Finding">Main Empirical Finding<a class="anchor-link" href="#Main-Empirical-Finding">¶</a></h3><p>This analysis provides consistent evidence of a <strong>positive, monotonic, and convex
+<h2 id="11.-Conclusion">11. Conclusion<a class="anchor-link" href="#11.-Conclusion">¶</a></h2><h3 id="Main-Empirical-Finding">Main Empirical Finding<a class="anchor-link" href="#Main-Empirical-Finding">¶</a></h3><p>This analysis provides consistent evidence of a <strong>positive, monotonic, and convex
 flow-performance relationship</strong> for active domestic equity (EDC) funds over 1999–2011:</p>
 <ol>
 <li><p><strong>Positive and significant</strong>: Funds with higher past returns attract more investor
@@ -9589,7 +10066,7 @@ sparse <code>crsp_portno</code> coverage before 2003.</li>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [21]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [26]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── File inventory ───────────────────────────────────────────────────────────</span>
@@ -9629,7 +10106,7 @@ data/processed/                final_step2_clean_wficn_edc_flows.csv      35.2  
 data/processed/           final_step3_regression_ready_wficn_edc.csv      31.6       NaN
  output/tables/                        final_analysis_overview_qc.md       NaN      11.2
  output/tables/                          final_analysis_pipeline.csv       NaN       1.1
- output/tables/                     final_notebook_file_inventory.md       NaN       2.7
+ output/tables/                     final_notebook_file_inventory.md       NaN       2.8
  output/tables/            final_step1_wficn_mapping_diagnostics.csv       NaN       0.9
  output/tables/             final_step1_wficn_mapping_diagnostics.md       NaN       2.2
  output/tables/                           final_step2_exclusions.csv       NaN       0.2

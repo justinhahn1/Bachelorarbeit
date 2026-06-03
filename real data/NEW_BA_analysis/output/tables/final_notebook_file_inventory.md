@@ -7,7 +7,7 @@
 | data/processed/ | final_step3_regression_ready_wficn_edc.csv | 31.6 | nan |
 | output/tables/ | final_analysis_overview_qc.md | nan | 11.2 |
 | output/tables/ | final_analysis_pipeline.csv | nan | 1.1 |
-| output/tables/ | final_notebook_file_inventory.md | nan | 2.7 |
+| output/tables/ | final_notebook_file_inventory.md | nan | 2.8 |
 | output/tables/ | final_step1_wficn_mapping_diagnostics.csv | nan | 0.9 |
 | output/tables/ | final_step1_wficn_mapping_diagnostics.md | nan | 2.2 |
 | output/tables/ | final_step2_exclusions.csv | nan | 0.2 |
