@@ -1,0 +1,25 @@
+# Raw and processed data files — never push CRSP/WRDS data to GitHub
+*.csv
+*.zip
+*.gz
+*.parquet
+*.dta
+
+# Data directories
+data/
+processed/
+
+# Output CSVs
+output/**/*.csv
+outputs/**/*.csv
+
+# macOS metadata
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
