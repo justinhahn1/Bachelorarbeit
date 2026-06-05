@@ -1,0 +1,24 @@
+\begin{table}[htbp]
+\centering
+\caption{Sample Construction --- Baseline (1991--2011 CRSP Data)}
+\label{tab:sample_construction_baseline}
+\small
+\begin{tabular}{lcccc}
+\toprule
+Step & Description & Obs removed & Obs remaining & WFICNs \\
+\midrule
+(0) & All WFICN-month observations after WFICN merge & — & 1241561 & 10740 \\
+(1) & Drop missing or zero portfolio TNA & 205 & 1241356 & 10740 \\
+(2) & Drop missing monthly portfolio return & 78282 & 1163074 & 10621 \\
+(3) & Keep sample window 1997–2011 & 191666 & 971408 & 10325 \\
+(4) & Keep domestic equity (EDC) & 835754 & 135654 & 1653 \\
+(5) & Exclude ETFs & 5872 & 129782 & 1565 \\
+(6) & Exclude index funds & 19324 & 110458 & 1340 \\
+(7) & Exclude non-target categories & 2148 & 108310 & 1322 \\
+(8) & Drop impossible returns & 1 & 108309 & 1322 \\
+(9) & Require lagged TNA >= \$10M & 8782 & 99527 & 1215 \\
+(10) & Drop missing winsorized flow & 202 & 99325 & 1215 \\
+12m regression sample & Require 12 consecutive lagged returns & — & 77140 & 1215 \\
+\bottomrule
+\end{tabular}
+\end{table}

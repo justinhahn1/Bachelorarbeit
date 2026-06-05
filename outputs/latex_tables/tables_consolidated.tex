@@ -1,0 +1,384 @@
+\documentclass{article}
+
+\usepackage{booktabs}
+\usepackage{geometry}
+\usepackage{caption}
+\usepackage{threeparttable}
+\usepackage{tabularx}
+\usepackage{graphicx}
+
+\geometry{margin=2.5cm}
+
+\begin{document}
+
+% ============================================================
+% Table 1
+% ============================================================
+
+\begin{table}[htbp]
+\centering
+\caption{Sample Construction --- Baseline (1991--2011 CRSP Data)}
+\label{tab:sample-construction-baseline}
+\small
+\begin{tabularx}{\textwidth}{lXccc}
+\toprule
+Step & Description & Obs removed & Obs remaining & WFICNs \\
+\midrule
+(0) & All WFICN-month observations after WFICN merge & -- & 1,241,561 & 10,740 \\
+(1) & Drop missing or zero portfolio TNA & 205 & 1,241,356 & 10,740 \\
+(2) & Drop missing monthly portfolio return & 78,282 & 1,163,074 & 10,621 \\
+(3) & Keep sample window 1997--2011 & 191,666 & 971,408 & 10,325 \\
+(4) & Keep domestic equity (EDC) & 835,754 & 135,654 & 1,653 \\
+(5) & Exclude ETFs & 5,872 & 129,782 & 1,565 \\
+(6) & Exclude index funds & 19,324 & 110,458 & 1,340 \\
+(7) & Exclude non-target categories & 2,148 & 108,310 & 1,322 \\
+(8) & Drop impossible returns & 1 & 108,309 & 1,322 \\
+(9) & Require lagged TNA $\geq$ \$10M & 8,782 & 99,527 & 1,215 \\
+(10) & Drop missing winsorized flow & 202 & 99,325 & 1,215 \\
+12m regression sample & Require 12 consecutive lagged returns & -- & 77,140 & 1,215 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ============================================================
+% Table 2
+% ============================================================
+
+\begin{table}[htbp]
+\centering
+\caption{Summary Statistics --- Baseline Sample (1991--2011)}
+\label{tab:summary-stats-baseline}
+\small
+\begin{tabularx}{\textwidth}{Xrrrrrr}
+\toprule
+Variable & N & Mean & Std. Dev. & p25 & Median & p75 \\
+\midrule
+Fund flow (\%) & 99,325 & 0.34 & 5.22 & -1.52 & -0.28 & 1.34 \\
+Monthly portfolio return (\%) & 99,325 & 0.67 & 6.52 & -3.02 & 1.15 & 4.56 \\
+Past 12-month return (\%) & 83,186 & 8.79 & 24.51 & -6.93 & 11.26 & 24.16 \\
+Portfolio TNA (\$M) & 99,325 & 705 & 1,833 & 73.7 & 213.4 & 611.7 \\
+Expense ratio (\%) & 90,309 & 1.34 & 0.40 & 1.10 & 1.28 & 1.53 \\
+Turnover ratio & 90,037 & 1.00 & 1.02 & 0.46 & 0.79 & 1.27 \\
+Fund age (years) & 99,325 & 10.80 & 8.46 & 5.16 & 8.92 & 13.91 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ============================================================
+% Table 3
+% ============================================================
+
+\begin{table}[htbp]
+\centering
+\caption{Flow--Performance Regressions --- Baseline (1991--2011)}
+\label{tab:regression-baseline}
+\small
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule
+Variable & (1) & (2) & (3) & (4) \\
+\midrule
+Past 12m return & 0.0209*** & 0.0201*** & 0.0928*** & 0.0943*** \\
+ & (0.0013) & (0.0013) & (0.0047) & (0.0046) \\
+log(TNA$_{t-1}$) & -- & 0.0002 & 0.0003 & 0.0002 \\
+ & -- & (0.0003) & (0.0003) & (0.0003) \\
+Expense ratio & -- & -0.2551** & -0.2477** & -0.1499 \\
+ & -- & (0.1053) & (0.1109) & (0.1095) \\
+Fund age (years) & -- & -0.0006*** & -0.0004*** & -0.0004*** \\
+ & -- & (0.0001) & (0.0001) & (0.0001) \\
+Turnover ratio & -- & -0.0016*** & -0.0013** & -0.0015*** \\
+ & -- & (0.0005) & (0.0005) & (0.0005) \\
+\midrule
+Month FE & No & No & Yes & Yes \\
+EDC style FE & No & No & No & Yes \\
+Observations & 77,140 & 77,140 & 77,140 & 77,140 \\
+R-squared & 0.012 & 0.023 & 0.087 & 0.089 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\footnotesize
+\item Notes: The dependent variable is winsorized monthly fund flow. Past 12m return is the lagged cumulative return over the previous twelve months. Standard errors, clustered by WFICN, are reported in parentheses. *, **, and *** denote significance at the 10\%, 5\%, and 1\% levels, respectively.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+% ============================================================
+% Table 4
+% ============================================================
+
+\begin{table}[htbp]
+\centering
+\caption{Quintile Analysis --- Baseline (1991--2011)}
+\label{tab:quintile-baseline}
+\small
+\begin{threeparttable}
+
+\textbf{Panel A: Average monthly flows by past-performance quintile}
+
+\vspace{0.2cm}
+
+\begin{tabular}{lccc}
+\toprule
+Quintile & Mean flow (pp/month) & Median flow (pp/month) & Observations \\
+\midrule
+Q1 (worst) & -1.35 & -1.16 & 16,694 \\
+Q2 & -0.57 & -0.67 & 16,606 \\
+Q3 & -0.09 & -0.35 & 16,613 \\
+Q4 & 0.57 & -0.02 & 16,606 \\
+Q5 (best) & 1.87 & 0.58 & 16,667 \\
+\midrule
+Q5--Q1 spread & 3.22 & & \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.45cm}
+
+\textbf{Panel B: Quintile regression coefficients (Q1 = reference)}
+
+\vspace{0.2cm}
+
+\begin{tabular}{lcccc}
+\toprule
+Variable & (1) & (2) & (3) & (4) \\
+\midrule
+Q2 & 0.0082*** & 0.0078*** & 0.0077*** & 0.0076*** \\
+ & (0.0007) & (0.0007) & (0.0007) & (0.0007) \\
+Q3 & 0.0131*** & 0.0124*** & 0.0122*** & 0.0123*** \\
+ & (0.0007) & (0.0007) & (0.0007) & (0.0007) \\
+Q4 & 0.0198*** & 0.0191*** & 0.0189*** & 0.0190*** \\
+ & (0.0008) & (0.0009) & (0.0008) & (0.0008) \\
+Q5 & 0.0331*** & 0.0324*** & 0.0323*** & 0.0325*** \\
+ & (0.0012) & (0.0012) & (0.0012) & (0.0012) \\
+\midrule
+Controls & No & Yes & Yes & Yes \\
+Month FE & No & No & Yes & Yes \\
+EDC style FE & No & No & No & Yes \\
+Observations & 77,140 & 77,140 & 77,140 & 77,140 \\
+R-squared & 0.057 & 0.066 & 0.094 & 0.096 \\
+\bottomrule
+\end{tabular}
+
+\begin{tablenotes}
+\footnotesize
+\item Notes: Funds are sorted into quintiles each month based on lagged twelve-month performance. Q1 contains the worst performers and Q5 the best performers. The dependent variable is winsorized monthly fund flow. Panel B reports coefficients relative to Q1. Standard errors, clustered by WFICN, are reported in parentheses. *, **, and *** denote significance at the 10\%, 5\%, and 1\% levels, respectively. In Model (3), the Q5 premium is 3.23 percentage points per month and the convexity ratio is approximately 2.4.
+\end{tablenotes}
+
+\end{threeparttable}
+\end{table}
+
+% ============================================================
+% Table 5
+% ============================================================
+
+\begin{table}[htbp]
+\centering
+\caption{Baseline vs. Extension Comparison}
+\label{tab:baseline-extension-comparison}
+\small
+\begin{threeparttable}
+\begin{tabularx}{\textwidth}{Xcc}
+\toprule
+Dimension & Baseline (1991--2011) & Extension (2003--2025) \\
+\midrule
+Raw CRSP period & 1991--2011 & 2003--2025 \\
+Effective 12m regression period & 2000--2011 & 2004--2025 \\
+Fund universe & Active domestic equity (EDC) & Active domestic equity (EDC) \\
+Regression N (M3/M4) & 77,140 & 135,585 \\
+Unique WFICNs (clusters) & 1,215 & 1,120 \\
+M3 coefficient (SE) & 0.0928 (0.0047) & 0.1171 (0.0043) \\
++10 pp past return to flow (M3) & +0.928 pp/month & +1.171 pp/month \\
+Flow SD (pp) & 5.22 & 4.08 \\
+Past 12m return SD (pp) & 24.5 & 19.1 \\
+Q5--Q1 unconditional means & +3.22 pp/month & +2.23 pp/month \\
+Q5 premium, regression-adjusted M3 & +3.230 pp/month & +2.610 pp/month \\
+Convexity ratio M3 & $\sim$2.4x & 3.10x \\
+Monotonic Q2--Q5 M3 & Yes, all 4 models & Yes, all 4 models \\
+Median portfolio TNA (\$M) & 212 & 306 \\
+Median fund age (years) & 8.9 & 14.8 \\
+SE clustering & WFICN & WFICN \\
+Fixed effects M3/M4 & Month / Month+EDC & Month / Month+EDC \\
+\bottomrule
+\end{tabularx}
+\begin{tablenotes}
+\footnotesize
+\item Notes: The extension applies the same WFICN-based aggregation, sample filters, flow definition, performance measure, and regression specification as the baseline analysis. The raw extension sample covers 2003--2025; the 12-month regression sample starts in 2004 because past 12-month performance requires twelve lagged monthly returns.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+% ============================================================
+% Table 6
+% ============================================================
+
+\begin{table}[htbp]
+\centering
+\caption{Flow--Performance Regressions --- Extension (2003--2025)}
+\label{tab:regression-extension}
+\small
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule
+Variable & (1) & (2) & (3) & (4) \\
+\midrule
+Past 12m return & 0.0219*** & 0.0216*** & 0.1171*** & 0.1173*** \\
+ & (0.0011) & (0.0011) & (0.0043) & (0.0043) \\
+log(TNA$_{t-1}$) & -- & 0.0000 & -0.0001 & -0.0002 \\
+ & -- & (0.0002) & (0.0002) & (0.0002) \\
+Expense ratio & -- & -0.3297*** & -0.3787*** & -0.3293*** \\
+ & -- & (0.0754) & (0.0833) & (0.0827) \\
+Fund age (years) & -- & -0.0004*** & -0.0003*** & -0.0003*** \\
+ & -- & (0.0000) & (0.0000) & (0.0000) \\
+Turnover ratio & -- & -0.0013*** & -0.0014*** & -0.0016*** \\
+ & -- & (0.0005) & (0.0005) & (0.0005) \\
+\midrule
+Month FE & No & No & Yes & Yes \\
+EDC style FE & No & No & No & Yes \\
+Observations & 135,585 & 135,585 & 135,585 & 135,585 \\
+R-squared & 0.012 & 0.023 & 0.075 & 0.076 \\
+Adj. R-squared & 0.012 & 0.023 & 0.073 & 0.074 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\footnotesize
+\item Notes: The dependent variable is winsorized monthly fund flow. Past 12m return is the lagged cumulative return over the previous twelve months. Standard errors, clustered by WFICN, are reported in parentheses. *, **, and *** denote significance at the 10\%, 5\%, and 1\% levels, respectively.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+% ============================================================
+% Table 7
+% ============================================================
+
+\begin{table}[htbp]
+\centering
+\caption{Quintile Analysis --- Extension (2003--2025)}
+\label{tab:quintile-extension}
+\small
+\begin{threeparttable}
+
+\textbf{Panel A: Average monthly flows by past-performance quintile}
+
+\vspace{0.2cm}
+
+\begin{tabular}{lccc}
+\toprule
+Quintile & Mean flow (pp/month) & Median flow (pp/month) & Observations \\
+\midrule
+Q1 (worst) & -1.50 & -1.13 & 34,231 \\
+Q2 & -0.84 & -0.78 & 34,075 \\
+Q3 & -0.51 & -0.62 & 34,064 \\
+Q4 & -0.19 & -0.47 & 34,075 \\
+Q5 (best) & 0.74 & -0.10 & 34,171 \\
+\midrule
+Q5--Q1 spread & 2.23 & & \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.45cm}
+
+\textbf{Panel B: Quintile regression coefficients (Q1 = reference)}
+
+\vspace{0.2cm}
+
+\begin{tabular}{lcccc}
+\toprule
+Variable & (1) & (2) & (3) & (4) \\
+\midrule
+Q2 & 0.0081*** & 0.0076*** & 0.0075*** & 0.0075*** \\
+ & (0.0005) & (0.0005) & (0.0005) & (0.0004) \\
+Q3 & 0.0117*** & 0.0112*** & 0.0111*** & 0.0110*** \\
+ & (0.0005) & (0.0005) & (0.0005) & (0.0005) \\
+Q4 & 0.0153*** & 0.0148*** & 0.0148*** & 0.0147*** \\
+ & (0.0006) & (0.0006) & (0.0006) & (0.0006) \\
+Q5 & 0.0265*** & 0.0262*** & 0.0261*** & 0.0261*** \\
+ & (0.0009) & (0.0009) & (0.0009) & (0.0009) \\
+\midrule
+Controls & No & Yes & Yes & Yes \\
+Month FE & No & No & Yes & Yes \\
+EDC style FE & No & No & No & Yes \\
+Observations & 135,585 & 135,585 & 135,585 & 135,585 \\
+R-squared & 0.049 & 0.060 & 0.075 & 0.076 \\
+\bottomrule
+\end{tabular}
+
+\begin{tablenotes}
+\footnotesize
+\item Notes: Funds are sorted into quintiles each month based on lagged twelve-month performance. Q1 contains the worst performers and Q5 the best performers. The dependent variable is winsorized monthly fund flow. Panel B reports coefficients relative to Q1. Standard errors, clustered by WFICN, are reported in parentheses. *, **, and *** denote significance at the 10\%, 5\%, and 1\% levels, respectively. In Model (3), the Q5 premium is 2.61 percentage points per month and the convexity ratio is approximately 3.10.
+\end{tablenotes}
+
+\end{threeparttable}
+\end{table}
+
+% ============================================================
+% Table 8
+% ============================================================
+
+\begin{table}[htbp]
+\centering
+\caption{Robustness: 6-Month Past Performance --- Baseline (1991--2011)}
+\label{tab:robustness-6m}
+\scriptsize
+\begin{threeparttable}
+
+\textbf{Panel A: Main regressions with past 6-month return}
+
+\vspace{0.2cm}
+
+\begin{tabular}{lcccc}
+\toprule
+Variable & (1) & (2) & (3) & (4) \\
+\midrule
+Past 6m return & 0.0362*** & 0.0358*** & 0.1319*** & 0.1334*** \\
+ & (0.0018) & (0.0018) & (0.0058) & (0.0058) \\
+log(TNA$_{t-1}$) & -- & 0.0001 & 0.0002 & 0.0001 \\
+ & -- & (0.0003) & (0.0003) & (0.0003) \\
+Expense ratio & -- & -0.1856* & -0.2069* & -0.1176 \\
+ & -- & (0.1052) & (0.1068) & (0.1079) \\
+Fund age (years) & -- & -0.0007*** & -0.0006*** & -0.0006*** \\
+ & -- & (0.0001) & (0.0001) & (0.0001) \\
+Turnover ratio & -- & -0.0008 & -0.0010* & -0.0012* \\
+ & -- & (0.0006) & (0.0006) & (0.0006) \\
+\midrule
+Month FE & No & No & Yes & Yes \\
+EDC style FE & No & No & No & Yes \\
+Observations & 83,319 & 83,319 & 83,319 & 83,319 \\
+R-squared & 0.016 & 0.029 & 0.081 & 0.083 \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.45cm}
+
+\textbf{Panel B: Quintile regressions with past 6-month return}
+
+\vspace{0.2cm}
+
+\begin{tabular}{lcccc}
+\toprule
+Variable & (1) & (2) & (3) & (4) \\
+\midrule
+Q2 & 0.0067*** & 0.0066*** & 0.0064*** & 0.0064*** \\
+ & (0.0006) & (0.0006) & (0.0006) & (0.0006) \\
+Q3 & 0.0112*** & 0.0108*** & 0.0107*** & 0.0107*** \\
+ & (0.0007) & (0.0007) & (0.0007) & (0.0007) \\
+Q4 & 0.0159*** & 0.0156*** & 0.0155*** & 0.0155*** \\
+ & (0.0008) & (0.0008) & (0.0008) & (0.0007) \\
+Q5 & 0.0291*** & 0.0287*** & 0.0286*** & 0.0288*** \\
+ & (0.0012) & (0.0011) & (0.0011) & (0.0011) \\
+\midrule
+Controls & No & Yes & Yes & Yes \\
+Month FE & No & No & Yes & Yes \\
+EDC style FE & No & No & No & Yes \\
+Observations & 83,319 & 83,319 & 83,319 & 83,319 \\
+R-squared & 0.040 & 0.052 & 0.078 & 0.080 \\
+\bottomrule
+\end{tabular}
+
+\begin{tablenotes}
+\footnotesize
+\item Notes: This table repeats the baseline flow--performance analysis using lagged six-month performance instead of lagged twelve-month performance. The dependent variable is winsorized monthly fund flow. Standard errors, clustered by WFICN, are reported in parentheses. *, **, and *** denote significance at the 10\%, 5\%, and 1\% levels, respectively.
+\end{tablenotes}
+
+\end{threeparttable}
+\end{table}
+
+\end{document}
